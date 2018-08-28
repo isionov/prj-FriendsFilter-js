@@ -1,5 +1,6 @@
 let template = require('../template.hbs');
-let friendsColl;
+let storage = localStorage;
+
 
 VK.init({
    apiId: 6668768
@@ -11,11 +12,11 @@ function matchNames(elemLi, name) {
 
 function getParentByClass(child, parentClass) {
     let parent = child;
-    while (parent=parent.parentElement) {
+     do {
         if (parent.classList.contains(parentClass)) {
             return parent;
         }
-    }
+    } while (parent=parent.parentElement)
     return null;
 }
 
@@ -76,64 +77,134 @@ function filterList(listColl, field) {
     }
 }
 
+////////////////////////////////////////
+
+function fillListHbs(arr, flag, wrapper) {
+    let resultObj = {items: arr, open: flag};
+    let htmlArr = template(resultObj);
+    wrapper.innerHTML = htmlArr;
+}
+
+
+
 auth()
 .then(() => {
     return callAPI('friends.get', {fields: 'photo_100'});
 })
 .then(friends => {
-    const html = template(friends);
-    const result = document.querySelector('#user-template');
+    function swapFriends(elemNum, from, wrapFrom, flagFrom, to, wrapTo, flagTo){
+        to[elemNum] = from[elemNum];
+        delete from[elemNum];
+        fillListHbs(from, flagFrom, wrapFrom);
+        fillListHbs(to, flagTo, wrapTo);
+        friendsLeftColl = document.querySelectorAll('#left-list-wrap #first-list li');
+        friendsRightColl = document.querySelectorAll('#right-list-wrap #first-list li');
+        filterList(friendsLeftColl, inputFirst)
+        filterList(friendsRightColl, inputSecond)
+    }
+    let [...friendsArrLeft] = friends.items;
 
-    result.innerHTML = html;
+    for (let index = 0; index < friendsArrLeft.length; index++) {
+        friendsArrLeft[index].id = index;
+    }
+    
+    let friendsArrRight = [];
+    const resultLeftList = document.querySelector('#left-list-wrap');
+    const resultRightList = document.querySelector('#right-list-wrap');
 
-    const movedResult = document.querySelector('#list-second');
+    fillListHbs(friendsArrLeft, true, resultLeftList);
+ 
+    let friendsLeftColl = document.querySelectorAll('#left-list-wrap #first-list li');
+    let friendsRightColl = document.querySelectorAll('#right-list-wrap #first-list li');
+
     const inputFirst = document.querySelector('#filter-input-first');
     const inputSecond = document.querySelector('#filter-input-second');
 
-    const friendsColl = document.querySelectorAll('#first-list li');
-
-    const resultUl = document.querySelector('#first-list');
+    const mainContent = document.querySelector('.maincontent');
+    
     // Реализация логики + и х
-    for (let index = 0; index < friendsColl.length; index++) {
-        friendsColl[index].id=index;
-        //   console.log(friendsColl);
-        friendsColl[index].addEventListener('click', (e) => {
+        document.body.addEventListener('click', (e) => {
             let elem = getParentByClass(e.target, 'icon');
-            if (elem && elem.id!=='moved-back') {
-                elem.id = 'moved-back';
-                let liElem = getParentByClass(elem, "list-elem");
-                movedResult.appendChild(liElem);
-                elem.querySelector('svg').innerHTML = '<use xlink:href="img/sprite.svg#close"></use>';
-            } else if (elem && elem.id==='moved-back') {
-                let liElem = getParentByClass(elem, "list-elem");
-                elem.id = 'move-forward';
-                elem.querySelector('svg').innerHTML = '<use xlink:href="img/sprite.svg#add"></use>';
-                let sibling = getClosest(+liElem.id, resultUl);
-                if (sibling) {
-                    resultUl.insertBefore(liElem, sibling);
-                } else {
-                    resultUl.appendChild(liElem);
-                }
-                
+            let elemWrapLeft = getParentById(e.target, 'left-list-wrap');
+            let elemWrapRight = getParentById(e.target, 'right-list-wrap');
+            let li = getParentByClass(e.target, 'list-elem');
+            let elemNum;
+            if (li) {
+                elemNum =  li.id;
+            }
+            
+
+            if (elem && elemWrapLeft) {
+                swapFriends(elemNum, friendsArrLeft, resultLeftList, true, friendsArrRight, resultRightList, false);
+                // friendsArrRight[elemNum] = friendsArrLeft[elemNum];
+                // delete friendsArrLeft[elemNum];
+                // fillListHbs(friendsArrLeft, true, resultLeftList);
+                // fillListHbs(friendsArrRight, false, resultRightList);
+                // friendsLeftColl = document.querySelectorAll('#left-list-wrap #first-list li');
+                // friendsRightColl = document.querySelectorAll('#right-list-wrap #first-list li');
+                // filterList(friendsLeftColl, inputFirst)
+                // filterList(friendsRightColl, inputSecond)
+            } else if (elem && elemWrapRight) {
+                swapFriends(elemNum, friendsArrRight, resultRightList, false, friendsArrLeft, resultLeftList, true);
+                // friendsArrLeft[elemNum] = friendsArrRight[elemNum];
+                // delete friendsArrRight[elemNum];
+                // fillListHbs(friendsArrLeft, true, resultLeftList);
+                // fillListHbs(friendsArrRight, false, resultRightList);
+                // friendsLeftColl = document.querySelectorAll('#left-list-wrap #first-list li');
+                // friendsRightColl = document.querySelectorAll('#right-list-wrap #first-list li');
+                // filterList(friendsLeftColl, inputFirst)
+                // filterList(friendsRightColl, inputSecond)
             }
         });
         
-    }
+    
     // Конец реализация логики + и х
     
     // Реализация логики фильтрации друзей
     
     inputFirst.addEventListener('keyup', (e) => {
         let currentList = document.querySelectorAll('#first-list li');
-        filterList(currentList, inputFirst)
+        filterList(friendsLeftColl, inputFirst)
     });
     
     inputSecond.addEventListener('keyup', (e) => {
         let currentList = document.querySelectorAll('#list-second li');
-        filterList(currentList, inputSecond)
+        filterList(friendsRightColl, inputSecond)
     });
     
-    // Реализация логики фильтрации друзей
+    // Конец реализация логики фильтрации друзей
 
+    // Реализация логики DnD
+
+    let currentDrag;
+
+    document.body.addEventListener("dragstart", (e) => {
+        const elem = getParentByClass(e.target, 'list-elem');
+        const zone = getParentByClass(e.target, 'template-wrapper');
+        if (elem) {
+            currentDrag = {startZone: zone, node: elem};
+        }
+    });
+
+    document.body.addEventListener('dragover', (e) => {
+        e.preventDefault();
+    });
+
+    document.body.addEventListener("drop", (e) => {
+        
+        event.preventDefault();
+        const zoneL = getParentByClass(e.target, 'drag');
+        const zoneR = getParentByClass(e.target, 'drop');
+        if (zoneR && currentDrag.startZone.id === 'left-list-wrap') {
+            swapFriends(+currentDrag.node.id, friendsArrLeft, resultLeftList, true, friendsArrRight, resultRightList, false);
+        }
+        if (zoneL && currentDrag.startZone.id === 'right-list-wrap') {
+            swapFriends(+currentDrag.node.id, friendsArrRight, resultRightList, false,friendsArrLeft, resultLeftList, true);
+        }
+        currentDrag = {};
+    });
+      // Конец реализация логики DnD
+      // Логика сохранения
+      
 });
 
