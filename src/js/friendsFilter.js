@@ -1,5 +1,12 @@
 let template = require('../template.hbs');
 let storage = localStorage;
+const inputFirst = document.querySelector('#filter-input-first');
+const inputSecond = document.querySelector('#filter-input-second');
+const closeBtn = document.querySelector('.close');
+
+closeBtn.addEventListener('click', (e)=>{
+    document.querySelector('.wrapper-content').style.display = 'none';
+});
 
 
 VK.init({
@@ -113,14 +120,33 @@ auth()
     const resultRightList = document.querySelector('#right-list-wrap');
 
     fillListHbs(friendsArrLeft, true, resultLeftList);
- 
+    
+    if (storage) {
+        friendsArrLeft = JSON.parse(storage['leftList']);
+        friendsArrRight = JSON.parse(storage['rightList']);
+        friendsArrLeft.forEach(function prepareArr(currentValue, index, array){
+            if (!currentValue) {
+                delete array[index];
+            }
+        });
+        friendsArrRight.forEach(function prepareArr(currentValue, index, array){
+            if (!currentValue) {
+                delete array[index];
+            }
+        });
+        fillListHbs(friendsArrLeft, true, resultLeftList);
+        fillListHbs(friendsArrRight, false, resultRightList);
+        friendsLeftColl = document.querySelectorAll('#left-list-wrap #first-list li');
+        friendsRightColl = document.querySelectorAll('#right-list-wrap #first-list li');
+        filterList(friendsLeftColl, inputFirst)
+        filterList(friendsRightColl, inputSecond)
+    }
     let friendsLeftColl = document.querySelectorAll('#left-list-wrap #first-list li');
     let friendsRightColl = document.querySelectorAll('#right-list-wrap #first-list li');
 
-    const inputFirst = document.querySelector('#filter-input-first');
-    const inputSecond = document.querySelector('#filter-input-second');
 
-    const mainContent = document.querySelector('.maincontent');
+
+    const save = document.querySelector('.save');
     
     // Реализация логики + и х
         document.body.addEventListener('click', (e) => {
@@ -136,24 +162,8 @@ auth()
 
             if (elem && elemWrapLeft) {
                 swapFriends(elemNum, friendsArrLeft, resultLeftList, true, friendsArrRight, resultRightList, false);
-                // friendsArrRight[elemNum] = friendsArrLeft[elemNum];
-                // delete friendsArrLeft[elemNum];
-                // fillListHbs(friendsArrLeft, true, resultLeftList);
-                // fillListHbs(friendsArrRight, false, resultRightList);
-                // friendsLeftColl = document.querySelectorAll('#left-list-wrap #first-list li');
-                // friendsRightColl = document.querySelectorAll('#right-list-wrap #first-list li');
-                // filterList(friendsLeftColl, inputFirst)
-                // filterList(friendsRightColl, inputSecond)
             } else if (elem && elemWrapRight) {
                 swapFriends(elemNum, friendsArrRight, resultRightList, false, friendsArrLeft, resultLeftList, true);
-                // friendsArrLeft[elemNum] = friendsArrRight[elemNum];
-                // delete friendsArrRight[elemNum];
-                // fillListHbs(friendsArrLeft, true, resultLeftList);
-                // fillListHbs(friendsArrRight, false, resultRightList);
-                // friendsLeftColl = document.querySelectorAll('#left-list-wrap #first-list li');
-                // friendsRightColl = document.querySelectorAll('#right-list-wrap #first-list li');
-                // filterList(friendsLeftColl, inputFirst)
-                // filterList(friendsRightColl, inputSecond)
             }
         });
         
@@ -205,6 +215,10 @@ auth()
     });
       // Конец реализация логики DnD
       // Логика сохранения
-      
+      save.addEventListener('click', (e) => {
+        //   console.log(JSON.parse(JSON.stringify(friendsArrLeft)));
+          storage['leftList'] = JSON.stringify(friendsArrLeft);
+          storage['rightList'] = JSON.stringify(friendsArrRight);
+      });
 });
 

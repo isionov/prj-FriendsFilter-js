@@ -16,6 +16,12 @@ body{
     overflow: hidden;
 }
 
+.close{
+    svg{
+        cursor: pointer;
+    }
+}
+
 .friends-container {
     width: 630px;
     height: 550px;
