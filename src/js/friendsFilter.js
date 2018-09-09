@@ -121,7 +121,7 @@ auth()
 
     fillListHbs(friendsArrLeft, true, resultLeftList);
     
-    if (storage) {
+    if (storage.getItem('leftList') || storage.getItem('rightList')) {
         friendsArrLeft = JSON.parse(storage['leftList']);
         friendsArrRight = JSON.parse(storage['rightList']);
         friendsArrLeft.forEach(function prepareArr(currentValue, index, array){
