@@ -1,196 +1,200 @@
-body{
-    font-family: Helvetica, sans-serif;
-    font-weight: 400;
+body {
+  font-family: Helvetica, sans-serif;
+  font-weight: 400;
 }
 
 ul {
-    padding: 0;
-    margin: 0; }
+  padding: 0;
+  margin: 0;
+}
 
 ul li {
-    list-style: none; 
+  list-style: none;
 }
 
-body{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100vw;
-    height: 100vh;
-    background-color: #999999;
-    overflow: hidden;
-}
-
-.close{
-    svg{
-        cursor: pointer;
-    }
-}
-
-.friends-container {
-    width: 630px;
-    height: 550px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-
-.wrapper-content {
-    width: 630px;
-    height: 500px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 20px;
-    overflow: hidden;
-    margin-top: 10px;
-}
-
-.header {
-    width: 100%;
-    height: 45px;
-    background-color: #ff8663;
-}
-
-.header-title {
-    display: inline-block;
-    vertical-align: middle;
-    width: 49%;
-    line-height: 45px;
-    color: #fff;
-    p{
-        margin-left: 10px;
-        line-height: normal;
-    }
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: #999999;
+  overflow: hidden;
 }
 
 .close {
+  svg {
+    cursor: pointer;
+  }
+}
+
+.friends-container {
+  width: 700px;
+  height: 550px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wrapper-content {
+  width: 650px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.header {
+  width: 100%;
+  height: 45px;
+  background-color: #ff8663;
+}
+
+.header-title {
+  display: inline-block;
+  vertical-align: middle;
+  width: 49%;
+  line-height: 45px;
+  color: #fff;
+  p {
+    margin-left: 10px;
+    line-height: normal;
+  }
+}
+
+.close {
+  display: inline-block;
+  vertical-align: middle;
+  width: 49%;
+  text-align: end;
+  line-height: 45px;
+
+  svg {
     display: inline-block;
     vertical-align: middle;
-    width: 49%;
-    text-align: end;
-    line-height: 45px;
-    
-    svg {
-        display: inline-block;
-        vertical-align: middle;
-        fill: #fff;
-        stroke: #fff;
-        width: 25px;
-        height: 25px;
-    }
+    fill: #fff;
+    stroke: #fff;
+    width: 25px;
+    height: 25px;
+  }
 }
 
 .maincontent {
-    width: 100%;
-    display: flex;
-    flex-grow: 2;
-    background-color: #f0f0f0;
+  width: 100%;
+  display: flex;
+  flex-grow: 2;
+  background-color: #f0f0f0;
+  overflow: hidden;
 }
 
-.drag, .drop {
-    width: 49.5%;
-    background-color: #fff;
+.drag,
+.drop {
+  width: 49.5%;
+  background-color: #fff;
+  overflow: auto;
 }
 
-.drop{
-    margin-left: 1.3%;
+.drop {
+  margin-left: 1.3%;
 }
 
-.friend-input{
-    height: 45px;
-    width: 100%;
-    background-color: #f0f0f0;
-    text-align: center;
+.friend-input {
+  height: 45px;
+  width: 100%;
+  background-color: #f0f0f0;
+  text-align: center;
 }
 
-.input-wrap{
-    height: 25px;
-    width: 285px;
-    border-radius: 15px;
-    display: inline-block;
-    margin-top: 10px;
-    background-color: #fff;
- }
+.input-wrap {
+  height: 25px;
+  width: 285px;
+  border-radius: 15px;
+  display: inline-block;
+  margin-top: 10px;
+  background-color: #fff;
+}
 
-.photo{
+.photo {
+  width: 45px;
+  height: 45px;
+  overflow: hidden;
+  border-radius: 22.5px;
+  img {
     width: 45px;
     height: 45px;
-    overflow: hidden;
-    border-radius: 22.5px;
-    img{
-       width: 45px;
-       height: 45px; 
-    }
+  }
 }
 
-.input-wrap input{
-   height: 25px;
-   width: 245px;
-   border-width: 0px;
-   padding: 0;
-   display: inline-block;
-   vertical-align: middle;
-   outline-style: none;
+.input-wrap input {
+  height: 25px;
+  width: 245px;
+  border-width: 0px;
+  padding: 0;
+  display: inline-block;
+  vertical-align: middle;
+  outline-style: none;
 }
 
-.input-wrap svg{
-     display: inline-block;
-     vertical-align: middle;
-     margin-left: 5px;
-     cursor: pointer;  
- }
- 
+.input-wrap svg {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
 .input-field--margin {
-    margin-left: 10px;
+  margin-left: 10px;
 }
 
 .content-title {
-    margin-left: 15px;
+  margin-left: 15px;
 }
 
 .friends-list {
-    margin-left: 15px;
-    width: 280px;
-    li .name{
-        margin-left: 5px;
-        flex-grow: 2;
-    }
+  margin-left: 15px;
+  width: 280px;
+  li .name {
+    margin-left: 5px;
+    flex-grow: 2;
+  }
 }
 
 .friends-list li {
-display: flex;
-height: 60px;
-align-items: center;
-border-top: 1px #f0f0f0 solid;
-cursor: pointer;
+  display: flex;
+  height: 60px;
+  align-items: center;
+  border-top: 1px #f0f0f0 solid;
+  cursor: pointer;
 }
 
 .friends-list li:last-child {
-    border-bottom: 1px #f0f0f0 solid;
-    }
-    
-.save{
-    background-color: #ff8663;
-    padding: 5px;
-    border-radius: 10px;
-    margin-right: 10px;
-    border: 0;
-    outline: none;
-    cursor: pointer;
-    color: #fff;
+  border-bottom: 1px #f0f0f0 solid;
+}
+
+.save {
+  background-color: #ff8663;
+  padding: 5px;
+  border-radius: 10px;
+  margin-right: 10px;
+  border: 0;
+  outline: none;
+  cursor: pointer;
+  color: #fff;
 }
 
 .footer {
-    width: 100%;
-    height: 45px;
-    background-color: #f0f0f0;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
+  width: 100%;
+  height: 45px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
-.icon svg{
-    fill:#c4c4c4;
+.icon svg {
+  fill: #c4c4c4;
 }
